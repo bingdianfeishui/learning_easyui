@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Acordion</title>
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+    <script type="text/javascript" src="../js/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+</head>
+
+<body class="easyui-layout">
+    <div id="r1" title="标题栏简介" data-options='region:"north"' style="height:100px">标题栏</div>
+    <div id="r2" title="导航栏" data-options="region:'west'" style="width:150px">
+        <div id="aa" class="easyui-accordion" data-options="fit:true">
+            <div title="Accordion">
+                <a id="addAccordion" class="easyui-linkbutton">添加折叠面板</a><br>
+                <a id="removeAccordion1" class="easyui-linkbutton">移除H3面板</a><br>
+                <a id="removeAccordion2" class="easyui-linkbutton">移除最后一个面板</a>
+            </div>
+            <div title="H2">aa</div>
+            <div title="H3">bb</div>
+        </div>
+    </div>
+    <div id="r3" title="主窗口" data-options="region:'center'"></div>
+    <div id="r4" title="右边栏" data-options="region:'east'" style="width:150px">
+        <div class="easyui-layout" fit="true">
+            <div title="ToDo" data-options="region:'center', collapsible:true" style="height:50%">TODO01</div>
+            <div title="日历" data-options="region:'south'" style="height:50%"></div>
+        </div>
+    </div>
+    <div id='r5' title="Footer" data-options='region:"south"' style="height:100px">脚注</div>
+
+    <script type="text/javascript">
+        var $index = 1;
+        $(function() {
+            $("#addAccordion").click(function() {
+                $("#aa").accordion("add", {
+                    title: "新增面板" + $index++,
+                    context: "new " + $index,
+                    selected: false
+                });
+            });
+            $("#removeAccordion1").click(function() {
+                if ($("#aa").accordion("getPanel", "H3")) {
+                    $("#aa").accordion("remove", "H3");
+                }
+            });
+            $("#removeAccordion2").click(function() {
+                var pp = $("#aa").accordion("panels");
+                if (pp.length > 1)
+                    $("#aa").accordion("remove", pp.length - 1);
+            });
+
+            $("#aa").accordion({
+                "onSelect": function() {
+                    var pp = $('#aa').accordion('getSelected'); // 获取选择的面板 
+                    if (pp) {
+                        alert("选中的面板：" + $(pp).prev(".panel-header").children(".panel-title").text());
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
