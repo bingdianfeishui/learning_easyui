@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Basic - Draggable02</title>
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+    <script type="text/javascript" src="../js/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+</head>
+
+<body style="width:600px; height:400px;border:1px #0ff solid">
+
+    <p>实时显示拖动数据</p>
+    <p>窗体尺寸：&nbsp;&nbsp;Width
+        <script>
+            document.write($('body').width());
+        </script>
+        &nbsp;&nbsp;&nbsp;&nbsp;Height
+        <script>
+            document.write($('body').height());
+        </script>
+    </p>
+    <div id="dd1" style="width:198px;height:98px;border:#ff0 1px solid;background:#abc">
+        <div id="title1" style="background:#ccc;">实时显示坐标，自动回位</div>
+        <p></p>
+    </div>
+    &nbsp;&nbsp;&nbsp;
+    <div id="dd2" style="width:198px;height:98px;border:#f00 1px solid;background:#bca">
+        <div id="title2" style="background:#ccc;">实时显示坐标，限制范围</div>
+        <p></p>
+        <span/>
+    </div>
+    <br/>
+
+    <script type="text/javascript">
+        //$('#dd1,#dd2').css('display', 'inline').css('float', 'left');
+
+        $("#dd1").draggable({
+            'handle': '#title1',
+            'onDrag': function(e) {
+                var d = e.data;
+                var str = 'Left:' + d.left + " Top:" + d.top + "<br>Right: " + (d.left + $(d.target).outerWidth()) + " Bottom:" + (d.top + $(d.target).outerHeight());
+                $('#dd1 p').html(str);
+            },
+            'revert': true,
+        });
+
+        $("#dd2").draggable({
+            'handle': '#title2',
+            'onDrag': function(e) {
+                var d2 = e.data;
+
+                var alarm = $('#dd2 span');
+                alarm.css('color', 'red');
+                alarm.html("");
+                if (d2.left < 0) {
+                    alarm.html("到达左边界");
+                    d2.left = 0;
+                }
+                if (d2.top < 0) {
+                    alarm.html("到达上边界");
+                    d2.top = 0;
+                }
+                if (d2.left + $(d2.target).outerWidth() > $(d2.parent).width()) {
+                    alarm.html("到达右边界");
+                    d2.left = $(d2.parent).width() - $(d2.target).outerWidth();
+                }
+                if (d2.top + $(d2.target).outerHeight() > $(d2.parent).height()) {
+                    alarm.html("到达下边界");
+                    d2.top = $(d2.parent).height() - $(d2.target).outerHeight();
+                }
+
+                var str = 'Left:' + d2.left + " Top:" + d2.top + "<br>Right: " + (d2.left + $(d2.target).outerWidth()) + " Bottom:" + (d2.top + $(d2.target).outerHeight());
+                $('#dd2 p').html(str);
+            },
+        });
+    </script>
+</body>
+
+</html>
