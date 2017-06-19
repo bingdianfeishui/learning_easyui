@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>DataGrid01</title>
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+    <script type="text/javascript" src="../js/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+</head>
+
+<body class="easyui-layout">
+    <div id="d1" title="Datagrid表格行编辑" data-options='region:"center"'>
+ 		<table id='dg' ></table>
+    </div>
+    <div id="tb">
+		<a id="save" href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true">Save</a>
+		<a id="sort" href="#" class="easyui-linkbutton" iconCls="icon-redo" plain="true">Sort</a>
+	</div>
+
+ 	<script type="text/javascript">
+ 		var columns = [[
+ 			{
+ 				checkbox:true,
+ 				field:'itemid',
+ 				width:60
+ 			},
+ 			{
+ 				title:'ProductID',
+ 				field:'productid',
+ 				width:60,
+ 				sortable:'true',
+ 				formatter:function(value, row){
+ 					return row.productname;
+ 				},
+ 				editor:{
+							type:'combobox',
+							options:{
+								valueField:'productid',
+								textField:'productname',
+								method:'get',
+								url:'products.json',
+								required:true
+							}
+						}
+ 			},
+ 			{
+ 				title:'成本',
+ 				field:'unitcost',
+ 				width:60,
+ 				sortable:'true',
+ 				editor:'numberbox'
+ 			},
+ 			{
+ 				title:'状态',
+ 				field:'status',
+ 				width:60,
+ 				editor:{type:'checkbox',options:{'on':'P','off':''}}
+ 			},
+ 			{
+ 				title:'上架价格',
+ 				field:'listprice',
+ 				width:60,
+ 				sortable:'true',
+ 				editor:{type:'numberbox',options:{precision:2}},
+ 				sorter:function(a,b){
+ 					return a>b ? 1 : -1;
+ 				}
+ 			},
+ 			{
+ 				title:'备注',
+ 				field:'attr1',
+ 				sortable:'true',
+ 				width:60,
+ 				editor:'text'
+ 			},
+ 		]];
+ 		$("#dg").datagrid({
+ 			url:'./datagrid_data1.json',
+ 			singleSelect:false,
+ 			ctrlSelect:true,
+ 			columns:columns,
+ 			title:"数据表测试",
+ 			height:400,
+ 			pagination:true,
+ 			pagelist:[5,10,20],
+ 			rownumbers:true,
+ 			toolbar:"#tb",
+ 			sortName:'listprice',
+ 			remoteSort:false,
+ 			onDblClickRow:edit,
+ 			onAfterEdit:afterEdit,
+ 			onEndEdit:endEdit,
+ 			onSortColumn: function (sort, order) {
+                console.log("sort:"+sort+",order："+order+"");
+            }
+ 		});
+ 		function edit(index, row){
+ 			$("#dg").datagrid("beginEdit", index);
+ 			if(dgOptions().editIndeies.indexOf(index) == -1)
+ 				dgOptions().editIndeies.push(index);
+ 		}
+ 		function save(){
+ 			console.log(dgOptions().editIndeies);
+ 			while(dgOptions().editIndeies.length > 0){
+ 				$("#dg").datagrid("endEdit", dgOptions().editIndeies.pop());
+ 			}			
+ 		}
+ 		function afterEdit(index, row, changes){
+ 			console.log();
+ 			console.log("afterEdit:"+index);
+ 			console.log("row:\t"+row);
+ 			console.log("changes:\t"+changes);
+ 		}
+ 		function endEdit(index, row, changes){
+ 			console.log();
+ 			console.log("endEdit:"+index);
+ 			console.log("row:\t"+row);
+ 			console.log("changes:\t"+changes);
+ 		}
+ 		function dgOptions(){
+ 			return $("#dg").datagrid("options");
+ 		}
+
+ 		$(function(){
+ 			$("#save").click(save);
+			$("#sort").click(function(){
+				$("#dg").datagrid('sort',{
+					sortName: 'listprice',
+					sortOrder: 'desc'
+				});
+			});
+ 			if(dgOptions().editIndeies == undefined)
+ 				dgOptions().editIndeies = [];
+ 		});
+ 	</script>
+</body>
+
+</html>

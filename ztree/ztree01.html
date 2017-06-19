@@ -60,7 +60,9 @@
             <div title="Ztree2" data-options="selected:false">
                 <ul id="ztree2" class="ztree"></ul>
                 <script type="text/javascript">
-                    $(function() {
+
+					$(function() {
+						
                         var setting2 = {
                             data: {
                                 simpleData: {
@@ -95,12 +97,20 @@
                 <ul id="ztree3" class="ztree"></ul>
                 <script type="text/javascript">
                     $(function() {
+						function ztreeClick(event, treeId, treeNode, flag){
+							var i =0;
+							alert(treeId+" "+ treeNode.name +" " +flag);
+						}
+						
                         var setting3 = {
                             data: {
                                 simpleData: {
                                     enable: true
                                 }
-                            }
+                            },
+							callback:{
+								onClick:ztreeClick
+							}
                         };
                         $.post("./menu.json", {}, function(data) {
                             $.fn.zTree.init($("#ztree3"), setting3, data);
